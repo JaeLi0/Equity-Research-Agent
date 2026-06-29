@@ -142,16 +142,60 @@ curl -X POST http://127.0.0.1:8000/api/v1/analyze-upload \
   -F "files=@/path/to/annual_report.pdf"
 ```
 
-### 方式三 — 完整 Docker 部署（API + Worker + PostgreSQL + Redis + Neo4j）
+### 方式三 — API 服务（本地，不用 Docker）
+
+```bash
+export DEEPSEEK_API_KEY="sk-..."   # 可选
+python start_api.py
+```
+
+---
+
+## 🐳 Docker 部署
+
+### 单容器运行
+
+```bash
+# 构建镜像
+docker build -t real-finan-api .
+
+# 运行（不带 Redis/Neo4j/PostgreSQL）
+docker run -p 8000:8000 \
+  -e DEEPSEEK_API_KEY="sk-..." \
+  -v $(pwd)/outputs:/app/outputs \
+  -v $(pwd)/data:/app/data \
+  real-finan-api
+```
+
+### 完整服务栈 — docker compose（推荐）
 
 ```bash
 cp .env.example .env
-# 按需编辑 .env，填入 DEEPSEEK_API_KEY
+# 按需填入 DEEPSEEK_API_KEY
 
 docker compose up --build
 ```
 
-一键启动五个服务：API 服务、异步 Worker、PostgreSQL、Redis、Neo4j。
+一键启动五个服务：
+
+| 服务 | 说明 |
+|---|---|
+| `real-finan-api` | FastAPI 服务，端口 8000 |
+| `real-finan-worker` | Redis 队列消费 Worker |
+| `postgres` | 任务持久化（PostgreSQL 16）|
+| `redis` | 任务队列（Redis 7）|
+| `neo4j` | 知识图谱（Neo4j 5，端口 7474 / 7687）|
+
+### 独立启动 Worker
+
+```bash
+docker run --rm \
+  -e DEEPSEEK_API_KEY="sk-..." \
+  -e MAS_REDIS_URL="redis://host.docker.internal:6379/0" \
+  -v $(pwd)/outputs:/app/outputs \
+  -v $(pwd)/data:/app/data \
+  real-finan-api python start_worker.py
+```
 
 ---
 

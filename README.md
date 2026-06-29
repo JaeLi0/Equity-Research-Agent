@@ -142,16 +142,62 @@ curl -X POST http://127.0.0.1:8000/api/v1/analyze-upload \
   -F "files=@/path/to/annual_report.pdf"
 ```
 
-### Option 3 — Full Docker Stack (API + Worker + PostgreSQL + Redis + Neo4j)
+### Option 3 — API Server (local, no Docker)
+
+```bash
+export DEEPSEEK_API_KEY="sk-..."   # optional
+python start_api.py
+```
+
+---
+
+## 🐳 Docker Deployment
+
+### Single container
+
+```bash
+# Build
+docker build -t real-finan-api .
+
+# Run (without Redis/Neo4j/PostgreSQL)
+docker run -p 8000:8000 \
+  -e DEEPSEEK_API_KEY="sk-..." \
+  -v $(pwd)/outputs:/app/outputs \
+  -v $(pwd)/data:/app/data \
+  real-finan-api
+```
+
+### Full stack — docker compose (recommended)
 
 ```bash
 cp .env.example .env
-# Edit .env and set DEEPSEEK_API_KEY if needed
+# Set DEEPSEEK_API_KEY in .env if needed
 
 docker compose up --build
 ```
 
-This starts five services: the API server, the async worker, PostgreSQL, Redis, and Neo4j.
+Starts five services in one command:
+
+| Service | Description |
+|---|---|
+| `real-finan-api` | FastAPI server on port 8000 |
+| `real-finan-worker` | Redis queue worker for async jobs |
+| `postgres` | Job persistence (PostgreSQL 16) |
+| `redis` | Task queue (Redis 7) |
+| `neo4j` | Knowledge graph (Neo4j 5, ports 7474 / 7687) |
+
+### Async worker (standalone)
+
+To run the worker separately against an existing Redis instance:
+
+```bash
+docker run --rm \
+  -e DEEPSEEK_API_KEY="sk-..." \
+  -e MAS_REDIS_URL="redis://host.docker.internal:6379/0" \
+  -v $(pwd)/outputs:/app/outputs \
+  -v $(pwd)/data:/app/data \
+  real-finan-api python start_worker.py
+```
 
 ---
 
