@@ -313,7 +313,9 @@ Five test cases cover: end-to-end report generation, replanner path + artifact e
 
 ## 🖥️ Screenshots
 
-> _Add screenshots here_
+<img width="2314" height="1498" alt="image" src="https://github.com/user-attachments/assets/1c0afc01-bf68-41b8-8192-4e5c8f7d265e" />
+<img width="1972" height="1279" alt="image" src="https://github.com/user-attachments/assets/3799c187-2405-4551-bc19-cb764c5a5b76" />
+<img width="1980" height="1279" alt="image" src="https://github.com/user-attachments/assets/20d2284b-2f98-4673-b734-54a53d574907" />
 
 ---
 
