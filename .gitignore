@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+outputs/
+test_artifacts/
+*.db
+.env
+.venv/
+.DS_Store
+uploads/
+data/neo4j/
+data/postgres/
+项目介绍/

@@ -1,0 +1,14 @@
+langgraph
+networkx
+fastapi
+uvicorn
+httpx
+sqlalchemy
+psycopg[binary]
+redis
+rq
+neo4j
+pymupdf
+python-multipart
+yfinance
+python-dotenv

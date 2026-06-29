@@ -1,0 +1,30 @@
+[project]
+name = "real-finan-demo"
+version = "0.1.0"
+description = "Enterprise multi-agent finance research and compliance demo built with LangGraph."
+requires-python = ">=3.11"
+dependencies = [
+  "langgraph",
+  "networkx",
+  "fastapi",
+  "uvicorn",
+  "httpx",
+  "sqlalchemy",
+  "psycopg[binary]",
+  "redis",
+  "rq",
+  "neo4j",
+  "pymupdf",
+  "python-multipart",
+  "yfinance",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
